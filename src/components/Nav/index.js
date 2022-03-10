@@ -1,27 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { capitalizeFirstLetter } from '../../utils/helpers';
 
-function Nav() {
+function Nav(props) {
 
-    const categories = [
-        {
-            name: "commercial",
-            description: 
-                "Photos of grocery stores, food trucks and other commercial projects",
-        },
-        {   name: "portraits", description: "Portraits of people in my life"},
-        {   name: "food", description: "Delicious delicacies"},
-        {
-            name: "landscape",
-            description: "Fields, farmhouses, waterfalls, and teh beauty of nature"
-        },
-    ]
+    // Deconstruct the three parameters that are fed into the props from App.js
+    const {
+        categories = [],
+        setCurrentCategory,
+        currentCategory,
+    } = props;
 
-    function categorySelected(name) {
-        console.log(`${name} clicked`)
-    }
+    // use React's useEffect hook to update the browser tab's text content
+    useEffect(() => {
+        // Update browser tab to reflect the current category selected
+        document.title = capitalizeFirstLetter(currentCategory.name);
+    }, [currentCategory]);
 
     return(
-        <header>
+        <header className="flex-row px-1">
             <h2>
                 <a data-testid="link" href="/">
                     <span role="img" aria-label="camera">📸</span> Oh Snap!
@@ -37,13 +33,28 @@ function Nav() {
                     <li>
                         <span>Contact</span>
                     </li>
+                    {/* 
+                        map() processes each item in an array and returns a new array
+                        In this case, it makes li and span item for each item in categories array
+                    */}
                     {categories.map((category) => (
                         <li
-                            className="mx-1"
+                            /* 
+                                To the li, assign class name 'mx-1'.
+                                If this li is selected, set class name 'navActive' too
+                            */
+                            className={`mx-1" ${
+                                currentCategory.name === category.name && 'navActive'
+                            }`}
                             key={category.name}
                         >
-                            <span onClick={() => categorySelected(category.name)}>
-                                {category.name}
+                            <span 
+                                onClick={() => {
+                                    /* sets currentCategory = category */
+                                    setCurrentCategory(category)
+                                }}
+                            >
+                                {capitalizeFirstLetter(category.name)}
                             </span>
                         </li>
                     ))}
