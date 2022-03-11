@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-//import Modal from '../Modal';
+import Modal from '../Modal';
 
 function PhotoList({ category }) {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentPhoto, setCurrentPhoto] = useState();
 
     const [photos] = useState([
         {
@@ -106,8 +109,17 @@ function PhotoList({ category }) {
      */
     const currentPhotos = photos.filter((photo) => photo.category === category);
 
+    const toggleModal = (image, index) => {
+        // "index: i" is a key value pair
+        setCurrentPhoto({...image, index: index});
+        setIsModalOpen(!isModalOpen);
+    }
+
     return (
         <div>
+            {isModalOpen && (
+                <Modal currentPhoto={currentPhoto} onClose={toggleModal} />
+            )}
             <div className="flex-row">
                 {/* 
                     Process each item in the currentPhotos array with the map function
@@ -117,6 +129,7 @@ function PhotoList({ category }) {
                         src={require(`../../assets/small/${category}/${index}.jpg`)}
                         alt={image.name}
                         className="img-thumbnail mx-1"
+                        onClick={() => toggleModal(image, index)}
                         // 'key' attribute must be there. Otherwise it'll cause an error
                         key={image.name}
                     />
