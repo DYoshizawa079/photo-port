@@ -8,6 +8,8 @@ function Nav(props) {
         categories = [],
         setCurrentCategory,
         currentCategory,
+        contactSelected,
+        setContactSelected
     } = props;
 
     // use React's useEffect hook to update the browser tab's text content
@@ -26,12 +28,12 @@ function Nav(props) {
             <nav>
                 <ul className="flex-row">
                     <li className="mx-2">
-                        <a data-testid="about" href="#about">
+                        <a data-testid="about" href="#about" onClick={() => setContactSelected(false)}>
                             About me
                         </a>
                     </li>
-                    <li>
-                        <span>Contact</span>
+                    <li className={`mx-2 ${contactSelected && 'navActive'}`}>
+                        <span onClick={() => setContactSelected(true)}>Contact</span>
                     </li>
                     {/* 
                         map() processes each item in an array and returns a new array
@@ -43,15 +45,16 @@ function Nav(props) {
                                 To the li, assign class name 'mx-1'.
                                 If this li is selected, set class name 'navActive' too
                             */
-                            className={`mx-1" ${
-                                currentCategory.name === category.name && 'navActive'
+                            className={`mx-2 ${
+                                currentCategory.name === category.name && !contactSelected && 'navActive'
                             }`}
                             key={category.name}
                         >
                             <span 
                                 onClick={() => {
                                     /* sets currentCategory = category */
-                                    setCurrentCategory(category)
+                                    setCurrentCategory(category);
+                                    setContactSelected(false);
                                 }}
                             >
                                 {capitalizeFirstLetter(category.name)}
